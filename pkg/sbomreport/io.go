@@ -179,7 +179,7 @@ func BuildSbomReportData(reports ty.Report, clock ext.Clock, registry v1alpha1.R
 		},
 		Registry: registry,
 		Artifact: artifact,
-		Summary:  bomSummary(*bom),
+		Summary:  BomSummary(*bom),
 		Bom:      *bom,
 	}, nil
 }
@@ -189,7 +189,7 @@ func generateSbomFromScanResult(report ty.Report) (*v1alpha1.BOM, error) {
 	if len(report.Results) > 0 && len(report.Results[0].Packages) > 0 {
 		// capture os.Stdout with a writer
 		done := capture()
-		err := tr.Write(report, fg.Options{
+		err := tr.Write(context.TODO(), report, fg.Options{
 			ReportOptions: fg.ReportOptions{
 				Format: ty.FormatCycloneDX,
 			},
@@ -211,7 +211,7 @@ func generateSbomFromScanResult(report ty.Report) (*v1alpha1.BOM, error) {
 	return bom, nil
 }
 
-func bomSummary(bom v1alpha1.BOM) v1alpha1.SbomSummary {
+func BomSummary(bom v1alpha1.BOM) v1alpha1.SbomSummary {
 	return v1alpha1.SbomSummary{
 		ComponentsCount:   len(bom.Components) + 1,
 		DependenciesCount: len(*bom.Dependencies),
